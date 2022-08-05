@@ -1,0 +1,176 @@
+<div class="wrapper">
+    <app-navbar>  
+    </app-navbar>
+     <!-- Content Wrapper. Contains page content -->
+     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                <h1 class="m-0 text-dark"></h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+    
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                  <div class="col-12">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">Nuevo Equipo</button>
+                    <div class="card-body">
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+                            <thead>
+                              <tr>
+                                <th>Numero Equipo</th>
+                                <th>Secretaria</th>
+                                <th>Ubicacion</th>
+                                <th>Departamento</th>
+                                <th>Direccion</th>
+                                <th>Modelo</th>
+                                <th>Serie</th>
+                                <th>Editar</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let equipo of equipos; let i = index">
+                                <td>{{ equipo.NUMERO_EQUIPO }}</td>
+                                <td>{{ equipo.SECRETARIA }}</td>
+                                <td>{{ equipo.UBICACION }}</td>
+                                <td>{{ equipo.DEPARTAMENTO }}</td>
+                                <td>{{ equipo.DIRECCION }}</td>
+                                <td>{{ equipo.MARCA}} {{ equipo.MODELO }}</td>
+                                <td>{{ equipo.SERIE }}</td>
+                                <td><button type="button" class="btn btn-primary" (click)="openModal(equipo.ID_EQUIPO_VICTORIA, equipo.NUMERO_EQUIPO, equipo.SECRETARIA, equipo.UBICACION, equipo.DEPARTAMENTO, equipo.DIRECCION, equipo.SERIE, equipo.MODELO)" data-toggle="modal" data-target="#exampleModal">
+                                   Editar
+                                  </button>
+                                </td>
+                              </tr>
+                            </tbody>
+                            </table>
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Equipo: {{this.selectEquipo.numero}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form (ngSubmit)="submitForm()" role="form" #form="ngForm">
+                                      <input type="hidden" name="id" [ngModel]="selectEquipo.idE">
+                                      <div class="form-group">
+                                        <label for="cliente">Cliente</label>
+                                        <input type="text" name="cliente" [(ngModel)]="selectEquipo.cliente" class="form-control" id="cliente" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="ubicacion">Ubicacion</label>
+                                        <input type="text" name="ubicacion" [(ngModel)]="selectEquipo.ubicacion" class="form-control" id="ubicacion" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="departamento">Departamento</label>
+                                        <input type="text" name="departamento" [(ngModel)]="selectEquipo.departamento" class="form-control" id="departamento" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="direccion">Direccion</label>
+                                        <input type="text" name="direccion" [(ngModel)]="selectEquipo.direccion" class="form-control" id="direccion" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="serie">Serie</label>
+                                        <input type="text" name="serie" [(ngModel)]="selectEquipo.serie" class="form-control" id="serie" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Modelo</label>
+                                        <select class="custom-select my-1 mr-sm-2" name="modelo" [(ngModel)]="selectEquipo.modelo" id="inlineFormCustomSelectPref">
+                                          <option value="{{selectEquipo.modelo}}" selected>{{selectEquipo.modelo}}</option>
+                                          <option *ngFor="let modelo of modelos" value="{{modelo.MODELO}}">{{modelo.MODELO}}</option>
+                                        </select>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                      </div>
+                                      </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Equipo Nuevo</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form class="form-horizontal" (ngSubmit)="submitFormEquip(submitBtn)" role="form" #form="ngForm">
+                                      <div class="input-group">
+                                        <label for="nuevo_numero"></label>
+                                        <input maxlength="4" (keyup)="verEquipo($event.target.value)" type="text" name="nuevo_numero" [(ngModel)]="nuevoEquipo.numero" class="form-control mb-2 mr-sm-2" id="nuevo_numero" aria-describedby="" placeholder="Numero equipo">
+                                        <small id="equipoExiste" class="form-text text-muted" style="display: none;">Este equipo ya existe</small>
+                                        <div class="input-group-btn">
+                                        <mat-progress-spinner
+                                          class="example-margin"
+                                          [color]="color"
+                                          [mode]="mode"
+                                          diameter="20"
+                                          [value]="value">Buscando...
+                                        </mat-progress-spinner>
+                                      </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="cliente">Cliente</label>
+                                        <input type="text" name="nuevo_cliente" [(ngModel)]="nuevoEquipo.cliente" class="form-control" id="nuevo_cliente" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="ubicacion">Ubicacion</label>
+                                        <input type="text" name="nuevo_ubicacion" [(ngModel)]="nuevoEquipo.ubicacion" class="form-control" id="nuevo_ubicacion" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="departamento">Departamento</label>
+                                        <input type="text" name="nuevo_departamento" [(ngModel)]="nuevoEquipo.departamento" class="form-control" id="nuevo_departamento" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="direccion">Direccion</label>
+                                        <input type="text" name="nuevo_direccion" [(ngModel)]="nuevoEquipo.direccion" class="form-control" id="nuevo_direccion" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="serie">Serie</label>
+                                        <input type="text" name="nuevo_serie" [(ngModel)]="nuevoEquipo.serie" class="form-control" id="nuevo_serie" aria-describedby="" placeholder="">
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref2">Modelo</label>
+                                        <select class="custom-select my-1 mr-sm-2" name="nuevo_modelo" [(ngModel)]="nuevoEquipo.modelo" id="inlineFormCustomSelectPref2">
+                                          <option value="{{selectEquipo.modelo}}" selected>{{selectEquipo.modelo}}</option>
+                                          <option *ngFor="let modelo of modelos" value="{{modelo.MODELO}}">{{modelo.MODELO}}</option>
+                                        </select>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        <button id="new_save" #submitBtn type="submit" class="btn btn-primary">Guardar</button>
+                                      </div>
+                                      </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                      </div>
+                    </div>
+                    <!-- /.col-md-6 -->
+                </div>
+            
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+      </div>
+        <!-- /.content-wrapper -->
+    </div>
+  </div>

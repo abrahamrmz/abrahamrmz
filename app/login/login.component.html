@@ -1,0 +1,52 @@
+<body class="hold-transition login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <b>Sharp</b> asociado
+      </div>
+      <!-- /.login-logo -->
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Inicia Sesion</p>
+    
+          <form (ngSubmit)="login()" #form="ngForm">
+            <div class="form-group has-feedback">
+              <input type="text" name="usuario" class="form-control" [(ngModel)]="user.email" placeholder="Usuario">
+              <span class="fa fa-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+              <input type="password" name="password" class="form-control" [(ngModel)]="user.password" placeholder="Password">
+              <span class="fa fa-lock form-control-feedback"></span>
+            </div>
+            <ng-template [ngIf]="message !== null">
+              <p>
+                <ngb-alert [dismissible]="false">
+                  <strong>Mensaje:</strong> {{ message }}.
+                </ngb-alert>
+              </p>
+            </ng-template>
+            <div class="row">
+              <div class="col-8">
+                <div class="checkbox icheck">
+                  <label>
+                    <input ([ngModel])="recuerdame" name="recuerdame" (change)="recordar($event.target.checked)" type="checkbox" checked> Recuerdame
+                  </label>
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-4">
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Entrar</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+    
+          <p class="mb-1">
+            <a (click)="retrievePass(user.email)" style="cursor: pointer;">Olivde mi contrasena</a>
+          </p>
+          <p class="mb-0">
+           
+          </p>
+        </div>
+        <!-- /.login-card-body -->
+      </div>
+    </div>

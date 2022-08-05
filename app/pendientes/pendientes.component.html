@@ -1,0 +1,357 @@
+<div class="wrapper">
+    <app-navbar>  
+    </app-navbar>
+     <!-- Content Wrapper. Contains page content -->
+     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                <h1 class="m-0 text-dark"></h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+    
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header d-flex p-0">
+                        <h3 class="card-title p-3">Pendientes</h3>
+                        <ul class="nav nav-pills ml-auto p-2">
+                          <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Pendientes</a></li>
+                          <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Seguimiento</a></li>
+                        </ul>
+                      </div>
+                      <form class="form-inline"> 
+                        <div class="form-group row">
+                          <label class="col-sm-4 col-form-label" for="select">Ordenar por: </label>
+                          <select (change)="ordenar($event.target.value)" id="select" class="form-control">
+                            <option value="" selected disabled hidden>Elegir</option>
+                            <option value="fechaR">Fecha (Mas reciente)</option>
+                            <option value="fechaA">Fecha (Mas Antiguo)</option>
+                            <option value="prioridad">Prioridad</option>
+                            <option value="tecnico">Tecnico</option>
+                            <option value="cliente">Cliente</option>
+                          </select>
+                        </div>
+                      </form>
+                      <div class="card-body">
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="tab_1">
+                            <ng-container *ngFor="let item of reportes; let i = index; trackBy: trackByFn;">
+                              <!--Simple three-line list with Icon -->
+                              <ul class="list-group pmd-list pmd-card-list">
+                                <li *ngIf="item.ESTATUS === 'P'"  class="list-group-item d-flex">
+                                    <ng-template #popContent><p>{{ item.CLIENTE }} <br> {{ item.MODELO }} <br> Tecnico: {{ item.NOMBRE }} </p></ng-template>
+                                    <i class="material-icons pmd-list-icon" [ngbPopover]="popContent" popoverTitle="{{ item.NUMERO }}">business</i>
+                                    <div class="media-body">
+                                        <h5 class="pmd-list-title">Numero: {{ item.NUMERO }} <button (click)="generarPDF(item.NUMERO)" type="button" class="btn btn-secondary btn-xs"><i class="far fa-file-pdf"></i></button></h5> <h6 class="pmd-list-title">{{ item.FECHA | date:'medium' }}</h6> 
+                                            <div class="row justify-content-between">
+                                                <div class="col-11">
+                                                    <p class="pmd-list-subtitle justify-content-start" >Reporta: {{ item.REPORTA }}<br>Ubicacion {{ item.UBICACION }} {{ item.DEPARTAMENTO }}<br>Razon de reporte: {{ item.FALLA}} <br> Dependencia: {{ item.CLIENTE }} <br> Tecnico: {{ item.NOMBRE }} </p>
+                                                </div>
+                                                <div class="col-1">
+                                                    <div class="btn-group-vertical" style="display: flex;">
+                                                        <button type="button" (click)="actualizar(item.NUMERO, item.OBSERVACIONES, item.SOLUCION, item.DESCRIPCION, item.DIAGNOSTICO, item.CONTADOR_BN, item.CONTADOR_C, item.ESCANER, item.NEGRO, item.CYAN, item.MAGENTA, item.YELLOW)" data-toggle="modal" data-target="#exampleModal" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i data-toggle="tooltip" data-placement="left" title="Actualizar Reporte" class="fas fa-toolbox"></i></button>
+                                                        <button type="button" (click)="sentNumero(item.NUMERO)" data-toggle="modal" data-target=".bd-example-modal-sm" class="btn btn-danger btn-sm" style="margin-bottom: 5px;"><i  data-toggle="tooltip" data-placement="left" title="Finalizar reporte" class="far fa-times-circle"></i></button>
+                                                        <button type="button" [routerLink]="['/chat', item.NUMERO]" class="btn btn-info btn-sm" data-toggle="tooltip" style="margin-bottom: 5px;" data-placement="left" title="Chat"><i class="far fa-comments"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">Actualizar Reporte</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="reporte" role="form" #form="ngForm">
+                                                <div class="form-group">
+                                                    <label for="tecnico">Tecnico</label>
+                                                    <ng-autocomplete
+                                                      name = "tecnico"
+                                                      [data]="dataTecnicos"
+                                                      [searchKeyword]="keyword"
+                                                      [itemTemplate]="itemTemplateX1"
+                                                      [initialValue]="initialTecnico"
+                                                      [notFoundTemplate]="notFoundTemplate"
+                                                      (selected)='selectEventTecnicos($event)'
+                                                      [(ngModel)] = "updateR.tecnico"
+                                                      [notFoundText] = "text"
+                                                      required
+                                                    >
+                                                    </ng-autocomplete>
+                                                  
+                                                    <ng-template #itemTemplateX1 let-tec>
+                                                      <a [innerHTML]="tec.nombre"></a>
+                                                    </ng-template>
+                                                  
+                                                    <ng-template #notFoundTemplate let-SinRegistro>
+                                                      <div [innerHTML]="SinRegistro"></div>
+                                                    </ng-template>
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <label for="solucion">Solucion</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="solucion" name="solucion" id="solucion" placeholder="Solucion">
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <label for="descripcion">Observaciones Cliente</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="descripcion" name="descripcion" id="descripcion" placeholder="Descripcion">
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <label for="descripcion">Observaciones Tecnico</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="observaciones" name="observaciones" id="observaciones" placeholder="Observaciones">
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <label for="descripcion">Diagnostico</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="diagnostico" name="diagnostico" id="diagnostico" placeholder="Diagnostico">
+                                                  </div>
+                                                  <div class="row justify-content-around">
+                                                    <div class="col-2">
+                                                      <label position="floating">% N</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="negro" name="negro" id="negro" placeholder="NEGRO">
+                                                    </div>
+                                                    <div class="col-2">
+                                                      <label position="floating">% C</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="cyan" name="cyan" id="cyan" placeholder="CYAN">
+                                                    </div>
+                                                    <div class="col-2">
+                                                      <label position="floating">% M</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="magenta" name="magenta" id="magenta" placeholder="MAGENTA">
+                                                    </div>
+                                                    <div class="col-2">
+                                                      <label position="floating">% Y</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="yellow" name="yellow" id="yellow" placeholder="YELLOW">
+                                                    </div>
+                                                  </div>
+                                                  <div class="row justify-content-around">
+                                                    <div class="col-3">
+                                                      <label position="floating">BN</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="contadorBN" name="contadorBN" id="contadorBN" placeholder="Contador BN">
+                                                    </div>
+                                                    <div class="col-3">
+                                                      <label position="floating">Color</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="contadorC" name="contadorC" id="contadorC" placeholder="Contador Color">
+                                                    </div>
+                                                    <div class="col-3">
+                                                      <label position="floating">Escaner</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="escaner" name="escaner" id="escaner" placeholder="Contador Escaner">
+                                                    </div>
+                                                  </div>
+                                                  <strong style="padding-right: 20px; padding-top: 20px;">Piezas</strong>
+                                                  <button style="padding-left: 10px; margin-top: 10px;" (click)="agregarPieza(updateR.reporte)" class="btn btn-primary">+</button>
+                                                  <div id="divPiezas">
+                                                    <div id="prueba">
+                                                      
+
+                                                    </div>
+                                                  </div>
+                                                  <div class="form-check">
+                                                    <input class="form-check-input" (change)="checkbox($event)" type="checkbox" value="" id="seguimiento1">
+                                                    <label class="form-check-label" for="seguimiento1">
+                                                      Dar seguimiento
+                                                    </label>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" (click)="submitForm()" class="btn btn-success mr-auto">Guardar</button>
+                                                    <button type="button" (click)="submitForm(true)" class="btn btn-primary">Guardar y Cerrar</button>
+                                                  </div>
+                                                </form>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-sm">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">Cancelar Reporte: {{ updateR.reporte }}</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                              <div class="modal-body">
+                                                Desea cancelar este reporte? (esta accion no puede deshacerse)
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" (click)="eliminarReporte()" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-lg btn-block">Cerrar</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                </li>
+                            </ul>
+                            </ng-container>
+                          </div>
+                          <!-- /.tab-pane -->
+                          <div class="tab-pane" id="tab_2">
+                            <ng-container *ngFor="let item of reportes; let i = index">
+                              <!--Simple three-line list with Icon -->
+                              <ul class="list-group pmd-list pmd-card-list">
+                                <li *ngIf="item.ESTATUS === 'S'"  class="list-group-item d-flex">
+                                    <ng-template #popContent><p>{{ item.CLIENTE }} <br> {{ item.MODELO }} <br> Tecnico: {{ item.NOMBRE }} </p></ng-template>
+                                    <i class="material-icons pmd-list-icon" [ngbPopover]="popContent" popoverTitle="{{ item.NUMERO }}">business</i>
+                                    <div class="media-body">
+                                        <h5 class="pmd-list-title">Numero: {{ item.NUMERO }} <button (click)="generarPDF(item.NUMERO)" type="button" class="btn btn-secondary btn-xs"><i class="far fa-file-pdf"></i></button></h5> <h6 class="pmd-list-title">{{ item.FECHA | date:'medium' }}</h6> 
+                                            <div class="row justify-content-between">
+                                                <div class="col-11">
+                                                    <p class="pmd-list-subtitle justify-content-start" >Reporta: {{ item.REPORTA }}<br>Ubicacion {{ item.UBICACION }} {{ item.DEPARTAMENTO }}<br>Razon de reporte: {{ item.FALLA}} <br> Dependencia: {{ item.CLIENTE }} <br> Tecnico: {{ item.NOMBRE }}</p>
+                                                </div>
+                                                <div class="col-1">
+                                                    <div class="btn-group-vertical" style="display: flex;">
+                                                      <button type="button" (click)="actualizar(item.NUMERO, item.OBSERVACIONES, item.SOLUCION, item.DESCRIPCION, item.DIAGNOSTICO, item.CONTADOR_BN, item.CONTADOR_C, item.ESCANER, item.NEGRO, item.CYAN, item.MAGENTA, item.YELLOW)" data-toggle="modal" data-target="#exampleModal2" class="btn btn-success btn-sm" style="margin-bottom: 5px;"><i data-toggle="tooltip" data-placement="left" title="Actualizar Reporte" class="fas fa-toolbox"></i></button>
+                                                      <button type="button" (click)="sentNumero(item.NUMERO)" data-toggle="modal" data-target="#cerrar" class="btn btn-danger btn-sm" style="margin-bottom: 5px;"><i  data-toggle="tooltip" data-placement="left" title="Finalizar reporte" class="far fa-times-circle"></i></button>
+                                                      <button type="button" [routerLink]="['/chat', item.NUMERO]" class="btn btn-info btn-sm" data-toggle="tooltip" style="margin-bottom: 5px;" data-placement="left" title="Chat"><i class="far fa-comments"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel2">Actualizar Reporte</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form role="form" #form="ngForm">
+                                                  <div class="form-group">
+                                                    <label for="tecnico">Tecnico</label>
+                                                    <ng-autocomplete
+                                                      name = "tecnico"
+                                                      [data]="dataTecnicos"
+                                                      [searchKeyword]="keyword"
+                                                      [itemTemplate]="itemTemplateX1"
+                                                      [initialValue]="initialTecnico"
+                                                      [notFoundTemplate]="notFoundTemplate"
+                                                      (selected)='selectEventTecnicos($event)'
+                                                      [notFoundText] = "text"
+                                                      required
+                                                    >
+                                                    </ng-autocomplete>
+                                                  
+                                                    <ng-template #itemTemplateX1 let-tec>
+                                                      <a [innerHTML]="tec.nombre"></a>
+                                                    </ng-template>
+                                                  
+                                                    <ng-template #notFoundTemplate let-SinRegistro>
+                                                      <div [innerHTML]="SinRegistro"></div>
+                                                    </ng-template>
+                                                  </div> 
+                                                  <div class="form-group">
+                                                    <label for="solucion">Solucion</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="solucion" name="solucion" id="solucion" placeholder="Solucion">
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <label for="descripcion">Observaciones Cliente</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="descripcion" name="descripcion" id="descripcion" placeholder="Descripcion">
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <label for="descripcion">Observaciones Tecnico</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="observaciones" name="observaciones" id="observaciones" placeholder="Observaciones">
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <label for="descripcion">Diagnostico</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="diagnostico" name="diagnostico" id="diagnostico" placeholder="Diagnostico">
+                                                  </div>
+                                                  <div class="row justify-content-around">
+                                                    <div class="col-2">
+                                                      <label position="floating">% N</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="negro" name="negro" id="negro" placeholder="NEGRO">
+                                                    </div>
+                                                    <div class="col-2">
+                                                      <label position="floating">% C</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="cyan" name="cyan" id="cyan" placeholder="CYAN">
+                                                    </div>
+                                                    <div class="col-2">
+                                                      <label position="floating">% M</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="magenta" name="magenta" id="magenta" placeholder="MAGENTA">
+                                                    </div>
+                                                    <div class="col-2">
+                                                      <label position="floating">% Y</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="yellow" name="yellow" id="yellow" placeholder="YELLOW">
+                                                    </div>
+                                                  </div>
+                                                  <div class="row justify-content-around">
+                                                    <div class="col-3">
+                                                      <label position="floating">BN</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="contadorBN" name="contadorBN" id="contadorBN" placeholder="Contador BN">
+                                                    </div>
+                                                    <div class="col-3">
+                                                      <label position="floating">Color</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="contadorC" name="contadorC" id="contadorC" placeholder="Contador Color">
+                                                    </div>
+                                                    <div class="col-3">
+                                                      <label position="floating">Escaner</label>
+                                                      <input type="text" class="form-control" [(ngModel)]="escaner" name="escaner" id="escaner" placeholder="Contador Escaner">
+                                                    </div>
+                                                  </div>
+                                                  <strong style="padding-right: 20px; padding-top: 20px;">Piezas</strong>
+                                                  <button style="padding-left: 10px; margin-top: 10px;" (click)="agregarPieza(updateR.reporte)" class="btn btn-primary">+</button>
+                                                  <div id="divPiezas">
+                                                    <div id="prueba">
+                                                      
+
+                                                    </div>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" (click)="submitForm()" class="btn btn-success mr-auto">Guardar</button>
+                                                    <button type="submit" class="btn btn-primary">Guardar y Cerrar</button>
+                                                  </div>
+                                                </form>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="modal fade bd-example-modal-sm" id="cerrar" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-sm">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">Cancelar Reporte: {{ updateR.reporte }}</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                              <div class="modal-body">
+                                                Desea cancelar este reporte? (esta accion no puede deshacerse)
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" (click)="eliminarReporte()" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-lg btn-block">Cerrar</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                </li>
+                            </ul>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <!-- /.tab-content -->
+                      </div>
+                      
+                      </div>
+                    </div>
+                      <!-- /.col-md-6 -->
+                  </div>
+            
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+      </div>
+        <!-- /.content-wrapper -->
+    </div>
+</div>

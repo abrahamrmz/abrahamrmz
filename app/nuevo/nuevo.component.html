@@ -1,0 +1,240 @@
+<div class="wrapper">
+  <app-navbar>  
+  </app-navbar>
+   <!-- Content Wrapper. Contains page content -->
+   <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+          <div class="container-fluid">
+          <div class="row mb-2">
+              <div class="col-sm-6">
+              <h1 class="m-0 text-dark"></h1>
+              </div><!-- /.col -->
+              <div class="col-sm-6">
+              </div><!-- /.col -->
+          </div><!-- /.row -->
+          </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+  
+      <!-- Main content -->
+      <div class="content">
+          <div class="container-fluid">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card card-primary">
+                    <div class="card-header">
+                      <h3 class="card-title">Nuevo Reporte</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form (ngSubmit)="submitForm(submitBtn)" role="form" #form="ngForm">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" name="editar" [(ngModel)]="editar" (change)="onCheckboxChange($event)" class="custom-control-input" id="customSwitch1">
+                            <label class="custom-control-label" for="customSwitch1">¿Editar Equipo? o Equipo Nuevo</label>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="numero">Numero de Equipo</label>
+                          <ng-autocomplete
+                              id = "numero"
+                              name = "numero"
+                              [data]="dataEquipos$ | async"
+                              [searchKeyword]="keyword2"
+                              [itemTemplate]="itemTemplateX"
+                              [initialValue]="initialEquipo"
+                              [notFoundTemplate]="notFoundTemplateE"
+                              (selected)='selectEventEquipos($event)'
+                              [(ngModel)] = "equipo.numero"
+                              required
+                              type = "text"
+                              (keypress)="numberOnly($event)"
+                              maxlength="4"
+                              [notFoundText] = "text"
+                            >
+                            </ng-autocomplete>
+                          
+                            <ng-template #itemTemplateX let-item>
+                              <a [innerHTML]="item.NUMERO_EQUIPO"></a>
+                            </ng-template>
+                          
+                            <ng-template #notFoundTemplateE let-SinRegistro>
+                              <div [innerHTML]="SinRegistro"></div>
+                            </ng-template>
+                        </div>
+                        <div class="form-group">
+                          <label for="serie">Numero de Serie</label>
+                          <ng-autocomplete
+                              name = "serie"
+                              [data]="dataEquipos$ | async"
+                              [searchKeyword]="keyword3"
+                              [itemTemplate]="itemTemplateY"
+                              [initialValue]="initialSerie"
+                              [notFoundTemplate]="notFoundTemplateX"
+                              (selected)='selectEventEquipos($event)'
+                              [(ngModel)] = "equipo.serie"
+                              [notFoundText] = "text"
+                              required
+                            >
+                            </ng-autocomplete>
+                          
+                            <ng-template #itemTemplateY let-ser>
+                              <a [innerHTML]="ser.SERIE"></a>
+                            </ng-template>
+                          
+                            <ng-template #notFoundTemplateX let-SinRegistro>
+                              <div [innerHTML]="SinRegistro"></div>
+                            </ng-template>
+                        </div>
+                        <div class="form-group">
+                          <label for="modelo">Modelo</label>
+                          <ng-autocomplete #modelo
+                              name = "modelo"
+                              [data]="dataModelos$ | async"
+                              [searchKeyword]="keyword4"
+                              [itemTemplate]="itemTemplateZ"
+                              [initialValue]="initialModelo"
+                              [notFoundTemplate]="notFoundTemplateX"
+                              (selected)='selectEventModelos($event)'
+                              (click)="getDataModelos()"
+                              [(ngModel)] = "equipo.modelo"
+                              [disabled] = "true"
+                              [notFoundText] = "text"
+                              required
+                            >
+                            </ng-autocomplete>
+                          
+                            <ng-template #itemTemplateZ let-ser>
+                              <a [innerHTML]="ser.MODELO"></a>
+                            </ng-template>
+                          
+                            <ng-template #notFoundTemplateX let-SinRegistro>
+                              <div [innerHTML]="SinRegistro"></div>
+                            </ng-template>
+                        </div>
+                        <div class="form-group">
+                          <label for="cliente">Cliente</label>
+                          <input type="text" [(ngModel)]="equipo.cliente" name="cliente" class="form-control" id="cliente" placeholder="cliente" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="departamento">Departamento</label>
+                          <input type="text" [(ngModel)]="equipo.departamento" name="departamento" class="form-control" id="departamento" placeholder="departamento" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="ubicacion">Ubicacion</label>
+                          <input type="text" [(ngModel)]="equipo.ubicacion" name="ubicacion" class="form-control" id="ubicacion" placeholder="ubicacion" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label for="ubicacion">Telefono</label>
+                          <input type="text" [(ngModel)]="equipo.telefono" name="telefono" class="form-control" id="telefono" placeholder="telefono" readonly>
+                        </div>
+                        <div [formGroup]="reporteForm" class="form-group">
+                          <label for="falla">Falla</label>
+                          <ng-autocomplete
+                          matInput
+                          formControlName="falla"
+                          name = "falla"
+                          [data]="dataFalla$ | async"
+                          [searchKeyword]="keyword"
+                          [itemTemplate]="itemTemplateF1"
+                          [initialValue]="initial"
+                          [notFoundTemplate]="notFoundTemplateF1"
+                          (selected)='selectEventFallas($event)'
+                          [(ngModel)] = "reporte.falla"
+                          [notFoundText] = "text"
+                          required
+                        >
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplateF1 let-falla>
+                          <a [innerHTML]="falla.NombreFalla"></a>
+                        </ng-template>
+                      
+                        <ng-template #notFoundTemplateF1 let-SinRegistro>
+                          <div [innerHTML]="SinRegistro"></div>
+                        </ng-template>
+                          <mat-error *ngFor="let validation of validation_messages.reporta">
+                            <mat-error class="error-message" *ngIf="reporteForm.get('falla').hasError(validation.type) && (reporteForm.get('falla').dirty || reporteForm.get('falla').touched)">{{validation.message}}</mat-error>
+                          </mat-error>
+                        </div>
+                        <div class="form-group">
+                          <label for="falla">Contacto</label>
+                          <input type="text" [(ngModel)]="reporte.contacto" name="contacto" class="form-control" id="contacto" placeholder="Contacto...">
+                        </div>
+                        <div class="form-group">
+                          <label for="fallaSP">Detalles de la Falla</label>
+                          <input type="text" [(ngModel)]="reporte.falla_sp" name="fallSP" class="form-control" id="fallaSP" placeholder="detalles...">
+                        </div>
+                        <div [formGroup]="reporteForm" class="form-group">
+                          <label for="persona">Peronsona que reporta</label>
+                          <input type="text" [(ngModel)]="reporte.reporta" matInput class="form-control" id="reporta" placeholder="Quien reporta..." formControlName="reporta" required>
+                          <mat-error *ngFor="let validation of validation_messages.reporta">
+                            <mat-error class="error-message" *ngIf="reporteForm.get('reporta').hasError(validation.type) && (reporteForm.get('reporta').dirty || reporteForm.get('reporta').touched)">{{validation.message}}</mat-error>
+                          </mat-error>
+                        </div>
+                        <div class="form-group">
+                          <label for="tecnico">Tecnico</label>
+                          <ng-autocomplete
+                            name = "tecnico"
+                            [data]="dataTecnicos$ | async"
+                            [searchKeyword]="keyword5"
+                            [itemTemplate]="itemTemplateX1"
+                            [initialValue]="initialTecnico"
+                            [notFoundTemplate]="notFoundTemplateT1"
+                            (selected)='selectEventTecnicos($event)'
+                            [(ngModel)] = "reporte.tecnico"
+                            [notFoundText] = "text"
+                            required
+                          >
+                          </ng-autocomplete>
+                        
+                          <ng-template #itemTemplateX1 let-tec>
+                            <a [innerHTML]="tec.nombre"></a>
+                          </ng-template>
+                        
+                          <ng-template #notFoundTemplateT1 let-SinRegistro>
+                            <div [innerHTML]="SinRegistro"></div>
+                          </ng-template>
+                        </div>
+                      </div>
+                      <!-- /.card-body -->
+      
+                      <div class="card-footer">
+                        <button type="button" [disabled]="!reporteForm.valid" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Enviar</button>
+                      </div>
+                      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Registrar Reporte</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              Desea registrar los cambios? (Esta accion no puede deshacerse)
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                              <button type="submit" #submitBtn class="btn btn-primary">Enviar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  
+          
+                  </div>
+                  <!-- /.col-md-6 -->
+              </div>
+          
+          <!-- /.container-fluid -->
+      </div>
+      <!-- /.content -->
+    </div>
+      <!-- /.content-wrapper -->
+  </div>
+</div>

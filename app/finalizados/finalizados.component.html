@@ -1,0 +1,72 @@
+<div class="wrapper">
+    <app-navbar>  
+    </app-navbar>
+     <!-- Content Wrapper. Contains page content -->
+     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                <h1 class="m-0 text-dark"></h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+    
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                        <label for="buscador">Buscar</label><p>El buscador puede filtrar por uno de los siguiente campos: Numero de Reporte, Serie, Cliente, Falla, Persona que reporto, Departamento, Modelo</p>
+                        <input id="buscador" class="form-control" (keyup)="searchTerm$.next($event.target.value)">
+                    </div>
+                    <!--Simple three-line list with Icon -->
+                    <ul *ngIf="results" class="list-group pmd-list pmd-card-list">
+                        <li *ngFor="let item of results; let i = index" class="list-group-item d-flex"> 
+                            <ng-template #popContent><p>{{ item.CLIENTE }} <br> {{ item.MODELO }} <br> Tecnico: {{ item.NOMBRE }} <br> Hora cierre: {{item.HORA | date:'medium' }} <br> Tiempo medio de reporte: {{item.TIEMPOM}}</p></ng-template>
+                            <i class="material-icons pmd-list-icon" [ngbPopover]="popContent" popoverTitle="{{ item.NUMERO }}">business</i>
+                            <div class="media-body">
+                                <h5 class="pmd-list-title">Numero: {{ item.NUMERO }} <button (click)="generarPDF(item.NUMERO)" type="button" class="btn btn-secondary btn-xs"><i class="far fa-file-pdf"></i></button></h5> <h6 class="pmd-list-title">{{ item.FECHA | date:'medium' }}</h6> 
+                                    <div class="row justify-content-between">
+                                        <div class="col-11">
+                                            <p class="pmd-list-subtitle justify-content-start" >Reporta: {{ item.REPORTA }}<br>Ubicacion {{ item.UBICACION }} {{ item.DEPARTAMENTO }}<br>Razon de reporte: {{ item.FALLA}}</p>
+                                        </div>
+                                        <div class="col-1">
+                                            <div class="btn-group-vertical" style="display: flex;">
+                                                <button type="button" (click)="reabrirReporte(item.NUMERO)" data-toggle="modal" data-target=".bd-example-modal-sm" class="btn btn-secondary btn-sm" style="margin-bottom: 5px;"><i  data-toggle="tooltip" data-placement="left" title="Reabrir reporte" class="fas fa-external-link-alt"></i></button>
+                                                <button type="button" [routerLink]="['/chat', item.NUMERO]" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="Chat"><i class="far fa-comments"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Cambiar Tecnico</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                        </li>
+                    </ul>
+                    </div>
+                    <!-- /.col-md-6 -->
+                </div>
+            
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+      </div>
+        <!-- /.content-wrapper -->
+    </div>
+</div>

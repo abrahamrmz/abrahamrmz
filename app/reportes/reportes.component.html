@@ -1,0 +1,106 @@
+<div *ngIf="isLog()">
+    <div class="wrapper">
+    <app-navbar>  
+    </app-navbar>
+     <!-- Content Wrapper. Contains page content -->
+     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1>Resumen</h1>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item"><p>{{ciudad}}</p></li>
+                </ol>
+              </div>
+            </div>
+          </div><!-- /.container-fluid -->
+        </section>
+    
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-lg-3 col-6">
+                <!-- small card -->
+                <div class="small-box bg-info">
+                  <div class="inner">
+                    <h3>{{totalR}}</h3>
+    
+                    <p>Total Reportes</p>
+                  </div>
+                  <div class="icon">
+                    <i class="far fa-folder-open"></i>
+                  </div>
+                  <a [routerLink]="['/finalizados']" class="small-box-footer">
+                    Ir a buscar <i class="fas fa-arrow-circle-right"></i>
+                  </a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+                <!-- small card -->
+                <div class="small-box bg-success">
+                  <div class="inner">
+                    <h3>{{porcentaje}}<sup style="font-size: 20px">%</sup></h3>
+    
+                    <p>Total Atendidos</p>
+                  </div>
+                  <div class="icon">
+                    <i class="far fa-folder"></i>
+                  </div>
+                  <a href="#" class="small-box-footer">
+                    Ir a busqueda Avanzada <i class="fas fa-arrow-circle-right"></i>
+                  </a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+                <!-- small card -->
+                <div class="small-box bg-warning">
+                  <div class="inner">
+                    <h3>{{totalP}}</h3>
+    
+                    <p>Reportes pendientes</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-exclamation"></i>
+                  </div>
+                  <a [routerLink]="['/pendientes']" class="small-box-footer">
+                    Ir a pendientes <i class="fas fa-arrow-circle-right"></i>
+                  </a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+                <!-- small card -->
+                <div class="small-box bg-danger">
+                  <div class="inner">
+                    <h3>{{totalE}}</h3>
+    
+                    <p>Equipos Registrados</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-print"></i>
+                  </div>
+                  <a href="#" class="small-box-footer">
+                    Ver equipos <i class="fas fa-arrow-circle-right"></i>
+                  </a>
+                </div>
+              </div>
+              <!-- ./col -->
+            </div>
+            <!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    
+        <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+          <i class="fas fa-chevron-up"></i>
+        </a>
+      </div>
+    </div>  
+</div>
