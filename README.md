@@ -44,6 +44,6 @@ Herramientas y tecnologías que uso en soporte e investigación de incidentes:
 
 ---
 
-![Top Langs](https://github-readme-stats-abrahamrmz.vercel.app/api/top-langs/?username=abrahamrmz&layout=compact&theme=tokyonight&hide_border=true)
+![Top Langs](https://github-readme-stats-fmz.vercel.app/api/top-langs/?username=abrahamrmz&layout=compact&theme=tokyonight&hide_border=true)
 
-![GitHub Stats](https://github-readme-stats-abrahamrmz.vercel.app/api?username=abrahamrmz&show_icons=true&theme=tokyonight&hide_border=true)
+![GitHub Stats](https://github-readme-stats-fmz.vercel.app/api?username=abrahamrmz&show_icons=true&theme=tokyonight&hide_border=true)
